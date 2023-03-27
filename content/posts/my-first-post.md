@@ -1,11 +1,17 @@
 ---
-title: "My First Post"
+title: "Music generation with GRUs"
 date: 2023-03-26T19:16:40+02:00
-draft: true
+draft: false
 ---
 
 ## Introduction
 
-This is **bold** text, and this is *emphasized* text.
+Holis
+ 
+## Data
 
-Visit the [Hugo](https://gohugo.io) website!
+## Preprocessing
+
+## Model
+
+## Generated midis
