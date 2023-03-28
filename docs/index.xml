@@ -9,12 +9,12 @@
     <lastBuildDate>Sun, 26 Mar 2023 19:16:40 +0200</lastBuildDate><atom:link href="https://nicovaras.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Music generation with GRUs</title>
-      <link>https://nicovaras.github.io/posts/my-first-post/</link>
+      <link>https://nicovaras.github.io/posts/music-generation-gru/</link>
       <pubDate>Sun, 26 Mar 2023 19:16:40 +0200</pubDate>
       
-      <guid>https://nicovaras.github.io/posts/my-first-post/</guid>
-      <description>Introduction Holis
-Data Preprocessing Model Generated midis </description>
+      <guid>https://nicovaras.github.io/posts/music-generation-gru/</guid>
+      <description>Introduction Hello, and welcome to my blog! I wanted to share with you a mini-project that&amp;rsquo;s been on my mind for some time.
+You see, I have a huge collection of MIDI files from various bands that I&amp;rsquo;ve used to learn guitar (actually, they&amp;rsquo;re Guitar Pro files, but converting them to MIDI is easy enough). With such musical data, I knew there was potential for an interesting machine learning project. There are countless things to explore, such as genre classification or instrument recognition, but I decided to focus on music generation.</description>
     </item>
     
   </channel>

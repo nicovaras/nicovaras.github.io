@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Music generation with GRUs | Sir Gradient&#39;s Descent into Madness</title>
+<meta property="og:title" content="Music generation with GRUs | Sir Gradient&#39;s Descent into Madness" />
+<meta name="twitter:title" content="Music generation with GRUs | Sir Gradient&#39;s Descent into Madness" />
+<meta itemprop="name" content="Music generation with GRUs | Sir Gradient&#39;s Descent into Madness" />
+<meta name="application-name" content="Music generation with GRUs | Sir Gradient&#39;s Descent into Madness" />
+<meta property="og:site_name" content="Sir Gradient&#39;s Descent into Madness" />
+
+<meta name="description" content="Exploring the intricacies of Machine Learning and unraveling the mysteries of Data Science, one algorithm at a time.">
+<meta itemprop="description" content="Exploring the intricacies of Machine Learning and unraveling the mysteries of Data Science, one algorithm at a time." />
+<meta property="og:description" content="Exploring the intricacies of Machine Learning and unraveling the mysteries of Data Science, one algorithm at a time." />
+<meta name="twitter:description" content="Exploring the intricacies of Machine Learning and unraveling the mysteries of Data Science, one algorithm at a time." />
+
+<meta property="og:locale" content="en-us" />
+<meta name="language" content="en-us" />
+
+
+
+  <meta itemprop="image" content="https://nicovaras.github.io/" />
+  <meta property="og:image" content="https://nicovaras.github.io/" />
+  <meta name="twitter:image" content="https://nicovaras.github.io/" />
+  <meta name="twitter:image:src" content="https://nicovaras.github.io/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-03-26T19:16:40&#43;0200 />
+    <meta property="article:published_time" content=2023-03-26T19:16:40&#43;0200 />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Music generation with GRUs",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-03-26",
+        "description": "",
+        "wordCount":  856 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-03-26",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Sir Gradient\u0027s Descent into Madness"
+        }
+    }
+    </script>
+
+  <meta name="generator" content="Hugo 0.111.3">
+
+  
+
+  <link rel="canonical" href="https://nicovaras.github.io/posts/music-generation-gru/"><link href="/sass/main.min.0eebb6db90b4ec9f4444ef402f08421ee056025ba860df3d749a9f299d472008.css" rel="stylesheet"><link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+  
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/images/favicon/site.webmanifest">
+  <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="/images/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="msapplication-config" content="/images/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/images/favicon/favicon.svg">
+
+  
+    </head><body data-theme = "dark" class="notransition">
+<script src="https://nicovaras.github.io/js/themeLoader.min.4e9e1a253d543bbfec02e7f2460d9621e719fd739dc8a5256faa91cda6e12e03.js"></script><div class="navbar" role="navigation">
+  <nav class="menu" aria-label="Main Navigation">
+    <a href="/" class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+    </a>
+    <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+    <label for="menu-trigger">
+      <span class="menu-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+      </span>
+    </label>
+
+    <div class="trigger">
+      <ul class="trigger-container">
+        
+        
+          <li>
+            <a 
+            class="menu-link "
+            href="/">
+            Home
+            </a>
+            
+          </li>
+        
+          <li>
+            <a 
+            class="menu-link active"
+            href="/posts/">
+            Posts
+            </a>
+            
+          </li>
+        
+        <li class="menu-separator">
+          <span>|</span>
+        </li>
+      </ul>
+      <a id="mode" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+      </a>
+    </div>
+  </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Music generation with GRUs</h1>
+                
+                <div class="post-meta">
+                    <time datetime="2023-03-26T19:16:40&#43;02:00" itemprop="datePublished"> Mar 26, 2023 </time>
+                </div>
+            </header>
+            <div class="page-content">
+                <h2 id="introduction">Introduction</h2>
+<p>Hello, and welcome to my blog! I wanted to share with you a <em>mini-project</em> that&rsquo;s been on my mind for some time.</p>
+<p>You see, I have a <em>huge</em> collection of MIDI files from various bands that I&rsquo;ve used to learn guitar (actually, they&rsquo;re Guitar Pro files, but converting them to MIDI is easy enough). With such musical data, I knew there was potential for an interesting machine learning project. There are countless things to explore, such as genre classification or instrument recognition, but I decided to focus on <strong>music generation</strong>.</p>
+<p>For my project, I selected one of my all-time favorite bands: <em>Megadeth</em>. I began by extracting each track from the MIDI files, ending up with a lot of guitar, bass, and drum tracks from over 100 songs (but with some repetition). Realizing that a single model might struggle to generate all the instruments simultaneously, I decided to start by generating <strong>drum tracks</strong> and then move on to guitar and bass.</p>
+<p>I opted for a recurrent neural network architecture featuring layers like <strong>LSTMs</strong> or <strong>GRUs</strong>, which are well-suited for sequence-based tasks such as music generation.</p>
+<p>So, let&rsquo;s dive in!</p>
+<h2 id="data-preprocessing">Data Preprocessing</h2>
+<p>As mentioned earlier, my starting point was a vast collection of <em>Megadeth</em> MIDIs. Before feeding this data into my model, I needed to convert the MIDI files into a suitable numerical representation. This involved transforming the raw MIDI files into sequences of notes represented by a matrix of numbers. To accomplish this, I chose to use the <strong>piano roll</strong> representation.</p>
+<p>The piano roll representation is an intuitive way to visualize and process MIDI data. In a piano roll, the horizontal axis represents time, while the vertical axis corresponds to the pitch of the notes, much like the keys on a piano. Each note is represented by a rectangular bar, where the position of the bar on the vertical axis indicates its pitch, and the length of the bar corresponds to the note&rsquo;s duration.</p>
+<p><img src="/piano_roll.png" alt="Piano roll (from Wikipedia)"></p>
+<p>Getting to this representation is easy with the <code>pretty_midi</code> library
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">def</span> <span style="color:#ff0086;font-weight:bold">midi_to_piano_roll</span>(midi_file, fs=<span style="color:#0086f7;font-weight:bold">16</span>):
+</span></span><span style="display:flex;"><span>    midi_data = pretty_midi.PrettyMIDI(midi_file)
+</span></span><span style="display:flex;"><span>    piano_roll = midi_data.get_piano_roll(fs=fs)
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">return</span> piano_roll</span></span></code></pre></div></p>
+<p>In our format, each note is represented as a one-hot encoded vector of size 128. By selecting an appropriate sequence length, we can create the input data needed for our model. This format allows the model to understand and generate new music based on the patterns it detects in the input sequences.</p>
+<p>With the data preprocessed and ready to go, we can now move on to defining and training the model and generating some new midis!</p>
+<h2 id="model">Model</h2>
+<p>After extensive experimentation with various architectures, I finally settled on a configuration that included a single <strong>GRU</strong> layer followed by a couple of <strong>Dense</strong> layers:</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>input_shape = (sequence_length, <span style="color:#0086f7;font-weight:bold">128</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>model = Sequential()
+</span></span><span style="display:flex;"><span>model.add(GRU(units=<span style="color:#0086f7;font-weight:bold">2048</span>, input_shape=input_shape, return_sequences=<span style="color:#fb660a;font-weight:bold">True</span>))
+</span></span><span style="display:flex;"><span>model.add(Dropout(<span style="color:#0086f7;font-weight:bold">0.5</span>))
+</span></span><span style="display:flex;"><span>model.add(TimeDistributed(Dense(<span style="color:#0086f7;font-weight:bold">2048</span>, activation=<span style="color:#0086d2">&#34;sigmoid&#34;</span>)))
+</span></span><span style="display:flex;"><span>model.add(Dropout(<span style="color:#0086f7;font-weight:bold">0.3</span>))
+</span></span><span style="display:flex;"><span>model.add(TimeDistributed(Dense(<span style="color:#0086f7;font-weight:bold">128</span>, activation=<span style="color:#0086d2">&#34;sigmoid&#34;</span>)))
+</span></span><span style="display:flex;"><span>model.compile(loss=<span style="color:#0086d2">&#34;binary_crossentropy&#34;</span>, optimizer=<span style="color:#0086d2">&#34;adam&#34;</span>)</span></span></code></pre></div>
+<pre tabindex="0"><code>_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ gru (GRU)                   (None, 96, 2048)          13381632  
+                                                                 
+ dropout (Dropout)           (None, 96, 2048)          0         
+                                                                 
+ time_distributed (TimeDistr  (None, 96, 2048)         4196352   
+ ibuted)                                                         
+                                                                 
+ dropout_1 (Dropout)         (None, 96, 2048)          0         
+                                                                 
+ time_distributed_1 (TimeDis  (None, 96, 128)          262272    
+ tributed)                                                       
+                                                                 
+=================================================================
+Total params: 17,840,256
+Trainable params: 17,840,256
+Non-trainable params: 0
+_________________________________________________________________
+</code></pre><p>To ensure that the model&rsquo;s performance is monitored, I added a callback to track the F1 metric, which I find relevant for this task:</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">def</span> <span style="color:#ff0086;font-weight:bold">on_epoch_end</span>(epoch, logs):
+</span></span><span style="display:flex;"><span>    y_pred = np.argmax(model.predict(X_val) &gt; <span style="color:#0086f7;font-weight:bold">0.5</span>, axis=<span style="color:#0086f7;font-weight:bold">2</span>)
+</span></span><span style="display:flex;"><span>    y_true = np.argmax(Y_val &gt; <span style="color:#0086f7;font-weight:bold">0.5</span>, axis=<span style="color:#0086f7;font-weight:bold">2</span>)
+</span></span><span style="display:flex;"><span>    f1 = f1_score(y_true.ravel(), y_pred.ravel(), average=<span style="color:#0086d2">&#39;macro&#39;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#0086d2">f</span><span style="color:#0086d2">&#34;</span><span style="color:#0086d2">\n</span><span style="color:#0086d2">Epoch </span><span style="color:#0086d2">{</span>epoch + <span style="color:#0086f7;font-weight:bold">1</span><span style="color:#0086d2">}</span><span style="color:#0086d2"> - F1-score on validation set: </span><span style="color:#0086d2">{</span>f1<span style="color:#0086d2">:</span><span style="color:#0086d2">.4f</span><span style="color:#0086d2">}</span><span style="color:#0086d2">&#34;</span>)</span></span></code></pre></div>
+<p>With the model architecture and callback in place, the training step is quite straightforward:</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>model.fit(X_train, 
+</span></span><span style="display:flex;"><span>          Y_train, 
+</span></span><span style="display:flex;"><span>          validation_split=<span style="color:#0086f7;font-weight:bold">0.2</span>, 
+</span></span><span style="display:flex;"><span>          epochs=<span style="color:#0086f7;font-weight:bold">1000</span>, 
+</span></span><span style="display:flex;"><span>          batch_size=<span style="color:#0086f7;font-weight:bold">128</span>, 
+</span></span><span style="display:flex;"><span>          callbacks=[f1_callback,  early_stopping], verbose=<span style="color:#0086f7;font-weight:bold">1</span>)</span></span></code></pre></div>
+<p>Once the training is complete, it&rsquo;s time to generate some new music. I accomplish this by feeding the model a random sequence from the input data (though you could create your own sequence if you prefer) and repeatedly prompting the model to make predictions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">def</span> <span style="color:#ff0086;font-weight:bold">generate_sequence</span>(model, seed_sequence, output_length):
+</span></span><span style="display:flex;"><span>    generated_sequence = seed_sequence.copy()
+</span></span><span style="display:flex;"><span>    sequence_length = seed_sequence.shape[<span style="color:#0086f7;font-weight:bold">0</span>]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">for</span> _ in range(output_length):
+</span></span><span style="display:flex;"><span>        input_sequence = np.array([generated_sequence[-sequence_length:]])
+</span></span><span style="display:flex;"><span>        next_step_probs = model.predict(input_sequence)[<span style="color:#0086f7;font-weight:bold">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        next_step = (next_step_probs &gt; <span style="color:#0086f7;font-weight:bold">0.5</span>).astype(np.float32)
+</span></span><span style="display:flex;"><span>        generated_sequence = np.vstack([generated_sequence, next_step])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">return</span> np.array(generated_sequence) 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;background-color:#0f140f;font-style:italic"># Choose a random seed sequence from the input data</span>
+</span></span><span style="display:flex;"><span>seed_idx = np.random.randint(len(input_data))
+</span></span><span style="display:flex;"><span>seed_sequence = input_data[seed_idx]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;background-color:#0f140f;font-style:italic"># Generate a new sequence of desired length</span>
+</span></span><span style="display:flex;"><span>output_length = <span style="color:#0086f7;font-weight:bold">8</span>
+</span></span><span style="display:flex;"><span>generated_sequence = generate_sequence(model, seed_sequence, output_length)    </span></span></code></pre></div>
+<p>Overall, the model performed well, and the generated MIDI files were quite interesting. If you&rsquo;d like to explore the project further, you can check out the notebook <a href="https://github.com/nicovaras/deep-learning-projects/blob/main/Music_generation.ipynb"><strong>here</strong></a>.</p>
+<h2 id="future-directions">Future Directions</h2>
+<p>In the future, I&rsquo;m ready to explore the potential of using <strong>transformers</strong> for this project. My initial attempt with transformers didn&rsquo;t quite yield the desired results, it was the first thing I tried. But I&rsquo;m optimistic that with some fine-tuning and experimentation, they could prove to be a powerful tool for music generation.</p>
+<p>Another avenue to explore is the generation of <em>complete songs</em>, incorporating multiple instruments. This would involve training models capable of generating not only drum tracks but also guitar and bass. The challenge lies in coordinating the different instruments to produce a cohesive piece of music.</p>
+<p>Lastly, I&rsquo;m also interested in experimenting with other bands and styles, as well as combining data from multiple sources to create a more diverse training set.</p>
+<p>Thanks for reading!</p>
+
+            </div>
+        </article>
+    </main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nicovaras" target="_blank" rel="noopener noreferrer me" title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a></div>
+    <small class="footer_copyright">
+        © 2023 Nico Varas.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noreferrer noopener">Hugo blog awesome</a>
+        theme on
+        <a href="https://gohugo.io" target="_blank" rel="noreferrer noopener">Hugo</a>.
+    </small>
+</footer>
+<script src="https://nicovaras.github.io/js/themeSwitchnMenu.min.2a402288242b6930b175a0722c267e2353055739b3975834df35e56d00dd8f50.js"></script></body>
+</html>
