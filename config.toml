@@ -5,7 +5,7 @@ title2 = 'The Count of Data Cristo'
 theme = 'hugo-blog-awesome'
 publishDir = "docs"
 
-googleAnalytics = '' # G-MEASUREMENT_ID
+googleAnalytics = 'G-3RPCMX2ZR6' # G-MEASUREMENT_ID
 enableEmoji = true
 
 
