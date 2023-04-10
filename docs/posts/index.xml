@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Sir Gradient&#39;s Descent into Madness</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Mar 2023 19:16:40 +0200</lastBuildDate><atom:link href="https://nicovaras.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 10 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nicovaras.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Painting with pixels: Variational Autoencoders applied to art</title>
+      <link>https://nicovaras.github.io/posts/vae/</link>
+      <pubDate>Mon, 10 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nicovaras.github.io/posts/vae/</guid>
+      <description>Introduction This time around, I felt the urge to explore the world of VAEs (Variational Autoencoders). These autoencoders can be used for generating new data, but we&amp;rsquo;ll get into that in a bit. I wanted to avoid the all-too-common MNIST example, so I opted for a more adventurous route: generating ⭐art!⭐ This experiment could either be a smashing success or an entertaining disaster. So, let&amp;rsquo;s dive into this artistic adventure with VAEs&amp;hellip;</description>
+    </item>
+    
     <item>
       <title>Music generation with GRUs</title>
       <link>https://nicovaras.github.io/posts/music-generation-gru/</link>

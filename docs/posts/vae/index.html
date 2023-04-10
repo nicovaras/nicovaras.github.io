@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  <meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title itemprop="name">Painting with pixels: Variational Autoencoders applied to art | Sir Gradient&#39;s Descent into Madness</title>
+<meta property="og:title" content="Painting with pixels: Variational Autoencoders applied to art | Sir Gradient&#39;s Descent into Madness" />
+<meta name="twitter:title" content="Painting with pixels: Variational Autoencoders applied to art | Sir Gradient&#39;s Descent into Madness" />
+<meta itemprop="name" content="Painting with pixels: Variational Autoencoders applied to art | Sir Gradient&#39;s Descent into Madness" />
+<meta name="application-name" content="Painting with pixels: Variational Autoencoders applied to art | Sir Gradient&#39;s Descent into Madness" />
+<meta property="og:site_name" content="Sir Gradient&#39;s Descent into Madness" />
+
+<meta name="description" content="Exploring the intricacies of Machine Learning and Data Science, one algorithm at a time.">
+<meta itemprop="description" content="Exploring the intricacies of Machine Learning and Data Science, one algorithm at a time." />
+<meta property="og:description" content="Exploring the intricacies of Machine Learning and Data Science, one algorithm at a time." />
+<meta name="twitter:description" content="Exploring the intricacies of Machine Learning and Data Science, one algorithm at a time." />
+
+<meta property="og:locale" content="en-us" />
+<meta name="language" content="en-us" />
+
+
+
+  <meta itemprop="image" content="https://nicovaras.github.io/" />
+  <meta property="og:image" content="https://nicovaras.github.io/" />
+  <meta name="twitter:image" content="https://nicovaras.github.io/" />
+  <meta name="twitter:image:src" content="https://nicovaras.github.io/" />
+
+
+
+
+    
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2023-04-10T00:00:00Z />
+    <meta property="article:published_time" content=2023-04-10T00:00:00Z />
+
+    
+
+    
+
+    <script defer type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Painting with pixels: Variational Autoencoders applied to art",
+        "author": {
+        "@type": "Person",
+        "name": ""
+        },
+        "datePublished": "2023-04-10",
+        "description": "",
+        "wordCount":  2239 ,
+        "mainEntityOfPage": "True",
+        "dateModified": "2023-04-10",
+        "image": {
+        "@type": "imageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "Sir Gradient\u0027s Descent into Madness"
+        }
+    }
+    </script>
+
+  <meta name="generator" content="Hugo 0.111.3">
+
+  
+
+  <link rel="canonical" href="https://nicovaras.github.io/posts/vae/"><link href="/sass/main.min.0eebb6db90b4ec9f4444ef402f08421ee056025ba860df3d749a9f299d472008.css" rel="stylesheet"><link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
+
+  
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+
+  
+  <link rel="icon" type="image/svg+xml" href="/images/favicon/favicon.svg">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+    onload="renderMathInElement(document.body);"></script>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3RPCMX2ZR6"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-3RPCMX2ZR6', { 'anonymize_ip': false });
+}
+</script>
+</head><body data-theme = "dark" class="notransition">
+<script src="https://nicovaras.github.io/js/themeLoader.min.4e9e1a253d543bbfec02e7f2460d9621e719fd739dc8a5256faa91cda6e12e03.js"></script><div class="navbar" role="navigation">
+  <nav class="menu" aria-label="Main Navigation">
+    <a href="/" class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
+viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+stroke-linejoin="round" class="feather feather-home">
+<title>Home</title>
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+    </a>
+    <input type="checkbox" id="menu-trigger" class="menu-trigger" />
+    <label for="menu-trigger">
+      <span class="menu-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
+      </span>
+    </label>
+
+    <div class="trigger">
+      <ul class="trigger-container">
+        
+        
+          <li>
+            <a 
+            class="menu-link "
+            href="/">
+            Home
+            </a>
+            
+          </li>
+        
+          <li>
+            <a 
+            class="menu-link active"
+            href="/posts/">
+            Posts
+            </a>
+            
+          </li>
+        
+        <li class="menu-separator">
+          <span>|</span>
+        </li>
+      </ul>
+      <a id="mode" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
+<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
+      </a>
+    </div>
+  </nav>
+</div>
+
+<div class="wrapper post">
+    <main class="page-content" aria-label="Content">
+        <article>
+            <header class="header">
+                <h1 class="header-title">Painting with pixels: Variational Autoencoders applied to art</h1>
+                
+                <div class="post-meta">
+                    <time datetime="2023-04-10T00:00:00&#43;00:00" itemprop="datePublished"> Apr 10, 2023 </time>
+                </div>
+            </header>
+            <div class="page-content">
+                <h2 id="introduction">Introduction</h2>
+<p>This time around, I felt the urge to explore the world of <strong>VAEs</strong> (Variational Autoencoders). These autoencoders can be used for generating new data, but we&rsquo;ll get into that in a bit. I wanted to avoid the <em>all-too-common</em> MNIST example, so I opted for a more adventurous route: generating ⭐art!⭐ This experiment could either be a smashing success or an entertaining disaster. So, let&rsquo;s dive into this artistic adventure with VAEs&hellip;</p>
+<p><img src="/art1.jpg" alt="Art!">
+<em>⭐Art!⭐</em></p>
+<h2 id="what-is-a-variational-autoencoder">What is a Variational Autoencoder?</h2>
+<p><img src="/vae.png" alt="VAE architecture (from Wikipedia)">
+<em>VAE architecture (from Wikipedia)</em></p>
+<h3 id="autoencoders">Autoencoders</h3>
+<p>Imagine you&rsquo;re trying to send a message to a friend, but you need to use <em>as few words as possible</em>. You&rsquo;d want to find a way to compress your message into a shorter form that still conveys the <strong>essential</strong> information. Then your friend would like to elaborate on your summarized information to reconstructthe original message. <strong>Autoencoders</strong> work in a similar way. They are <em>unsupervised</em> neural networks that learn to <strong>compress</strong> and then <strong>reconstruct</strong> data, much like you would with your message.</p>
+<p>An autoencoder has two main parts: the <strong>encoder</strong> and the <strong>decoder</strong>. Picture the encoder as a master of summarization, while the decoder is an expert at elaborating on the summary.</p>
+<h4 id="encoder">Encoder</h4>
+<p>The <strong>encoder</strong> is likes to <em>summarize</em>. It takes the input data and distills it into a brief summary (called <em>latent space representation</em>). This summary captures the <em>essence</em> of the data, but in a much more compact form. The goal of the encoder is to represent the input data in the most concise and efficient way possible, without losing too much information.</p>
+<h4 id="decoder">Decoder</h4>
+<p>On the other hand, the <strong>decoder</strong> is like a storyteller who takes the summary (<em>latent space representation</em>) and reconstructs the full original data from it. The decoder aims to <em>recreate</em> the original data as accurately as possible, using only the information provided in the summary.</p>
+<p>Autoencoders learn to perform these tasks by minimizing the difference between the input data and the reconstructed data. By doing so, they become effective at tasks like data compression, denoising, feature extraction, and representation learning.</p>
+<p>Today, we&rsquo;re exploring <strong>representation learning</strong>. Our aim is to find a useful way to represent our images, so we can create new ones that share similar features with the original images.</p>
+<h3 id="adding-the-variation-and-latent-space">Adding the variation and latent space</h3>
+<p>While traditional autoencoders can learn to compress and reconstruct data, they might not be the best choice for generating new, high-quality samples. This is where <strong>Variational Autoencoders</strong> (VAEs) come into play. VAEs add a <em>probabilistic twist</em> to the autoencoder framework, making them more suitable for generating diverse and realistic samples.</p>
+<p>In a regular autoencoder, the <em>latent space</em> is usually a small Dense layer. But this fixed layer has a drawback: once trained, it always gives the same output for the same input, making its behavior <strong>deterministic</strong>.</p>
+<p>In a <strong>VAE</strong>, we handle the <em>latent space</em> as if it were a game of chance. This means that every time we use an input, the output has a <strong>random element</strong>, so it&rsquo;s not always the same. For the same input, we can get <em>different</em> outputs that still are in the trained data space. Our plan is to train the VAE with images and let its random nature create a variety of interesting results.</p>
+<p>Instead of using a Dense layer, we incorporate two layers, <strong>μ</strong> and <strong>σ</strong>, which represent the parameters of a normal distribution. This way, we compress our images into a Gaussian-shaped space. When evaluating the model, we place a step between the encoder and decoder that involves sampling a random variable from the normal distribution using <strong>μ</strong> and <strong>σ</strong>. This sampled variable is then used to modify the input to the decoder.</p>
+<p>This looks easy until you have to train it&hellip; How do you do backpropagation with <strong>non deterministic</strong> layers? (spoiler: <em>you don&rsquo;t</em>)</p>
+<h3 id="reparametrization-trick">Reparametrization trick</h3>
+<p>Remember that we&rsquo;re representing our input in a compressed form (<em>latent space</em>) and in a <em>stochastic</em> manner (due to the <strong>μ</strong> and <strong>σ</strong> layers). However, we can&rsquo;t perform backpropagation like this. The <strong>reparameterization trick</strong> is a clever technique used to enable gradient-based optimization in models like VAEs that involve stochastic sampling from a distribution. It helps us backpropagate through the random sampling process in the latent space by transforming it into a <em>deterministic</em> operation.</p>
+<p>In a VAE, we have two components in the latent space: <strong>μ</strong> and <strong>σ</strong>, which represent the mean and standard deviation of a normal distribution, so far so good. To sample a latent variable, we would typically generate a random value from this distribution. However, this random sampling is <em>not differentiable</em>, and we cannot backpropagate the gradients through it.</p>
+<p>The <strong>reparameterization trick</strong> comes to the rescue by separating the random sampling process from the model parameters. Instead of directly sampling from the normal distribution, we sample a random variable <strong>epsilon</strong> from a standard normal distribution (with a mean of 0 and standard deviation of 1). We then scale this random variable by the learned standard deviation (<strong>σ</strong>) and add the learned mean (<strong>μ</strong>). Mathematically, it looks like this:</p>
+<pre tabindex="0"><code>z = mu + sigma * epsilon
+</code></pre><p>Now, the sampling process becomes a deterministic operation: <strong>μ</strong> and <strong>σ</strong> are model parameters like any other. When the time comes to generate a random sample, we use <em>epsilon</em> (that is not a model parameter). This transformation allows gradients to flow through the model during backpropagation, enabling the optimization of VAEs using gradient-based methods.</p>
+<h3 id="loss-function">Loss function</h3>
+<p>Another important component of our VAE is the <strong>loss function</strong>. How do we measure <em>correctness</em> of our process?</p>
+<p>In a Variational Autoencoder, the loss function has two main parts, which set it apart from the loss function in a regular autoencoder. The two parts of the VAE loss function are the <strong>reconstruction loss</strong> and the <strong>KL-divergence loss</strong>.</p>
+<p><strong>Reconstruction loss</strong>: The reconstruction loss checks how well the VAE can <em>rebuild</em> the input data. This part of the loss makes sure that the output created is as close to the original input as possible. Depending on the input data, we can use metrics like <em>Mean Squared Error</em> or <em>Binary Cross-Entropy</em> for the reconstruction loss. This reconstruction loss is what traditional autoencoders use. You have a message that you compress and want to get the original message again, so your measure of correctness should be how close is your message to the original one.</p>
+<p><strong>KL-divergence loss</strong>: This is the special sauce of the VAE loss function and&hellip; kinda hard to explain (maybe for another post). Basically, it measures how different the learned distribution in the <em>latent space</em> (controlled by <strong>μ</strong> and <strong>σ</strong>) is from a standard normal distribution (with a mean of 0 and standard deviation of 1). The KL-divergence loss acts like a gentle nudge, guiding the learned distribution closer to the standard distribution. This helps create a smooth and continuous structure in the latent space, which is great for generating new samples.</p>
+<p>On the other hand, a <em>regular autoencoder</em> only cares about the reconstruction loss, aiming to minimize the difference between the input data and the output. By adding the <strong>KL-divergence loss</strong>, a VAE focuses not just on the quality of reconstruction but also on building a <em>well-structured</em> latent space. This makes VAEs perfect for tasks like generating <em>new data</em> and smoothly transitioning between samples.</p>
+<p>This is the formula for the KL-divergence loss. It could seem daunting but it is a matter of just coding it into the model.</p>
+<p>$$
+\frac{1}{2} \left[ \left(\sum_{i=1}^{z}\mu_{i}^{2} + \sum_{i=1}^{z}\sigma_{i}^{2} \right) - \sum_{i=1}^{z} \left(log(\sigma_{i}^{2}) + 1 \right) \right]
+$$</p>
+<h2 id="vae-implementation">VAE implementation</h2>
+<p>Getting the implementation done took <em>a bit of effort</em>. I initially aimed to work with <strong>CVAEs</strong> (VAEs with convolutional layers). Despite giving it my best shot, I couldn&rsquo;t quite get it to work as expected. So, I decided to stick with standard VAEs for now. Perhaps in the future, I&rsquo;ll explore more powerful models like <em>GANs</em> or <em>diffusion models</em> to tackle this challenge.</p>
+<p>The implementation is simple, just the <strong>Encoder</strong>, <strong>Decoder</strong>, <strong>loss function</strong> and putting it all together in a <strong>VAE class</strong>.</p>
+<h3 id="encoder-1">Encoder</h3>
+<p>The Encoder is relatively straightforward, consisting of three Dense layers that progressively decrease in size and two Dense layers that represent <strong>μ</strong> and <strong>σ</strong>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">class</span> Encoder(Model):
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">def</span> __init__(self, latent_dim):
+</span></span><span style="display:flex;"><span>        super(Encoder, self).__init__()
+</span></span><span style="display:flex;"><span>        self.dense1 = layers.Dense(<span style="color:#0086f7;font-weight:bold">512</span>, activation=<span style="color:#0086d2">&#39;relu&#39;</span>)
+</span></span><span style="display:flex;"><span>        self.dense2 = layers.Dense(<span style="color:#0086f7;font-weight:bold">256</span>, activation=<span style="color:#0086d2">&#39;relu&#39;</span>)
+</span></span><span style="display:flex;"><span>        self.dense3 = layers.Dense(<span style="color:#0086f7;font-weight:bold">128</span>, activation=<span style="color:#0086d2">&#39;relu&#39;</span>)
+</span></span><span style="display:flex;"><span>        self.dense_mean = layers.Dense(latent_dim)
+</span></span><span style="display:flex;"><span>        self.dense_log_var = layers.Dense(latent_dim)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">def</span> <span style="color:#ff0086;font-weight:bold">call</span>(self, inputs):
+</span></span><span style="display:flex;"><span>        x = self.dense1(inputs)
+</span></span><span style="display:flex;"><span>        x = self.dense2(x)
+</span></span><span style="display:flex;"><span>        x = self.dense3(x)
+</span></span><span style="display:flex;"><span>        mean = self.dense_mean(x)
+</span></span><span style="display:flex;"><span>        log_var = self.dense_log_var(x)
+</span></span><span style="display:flex;"><span>        <span style="color:#fb660a;font-weight:bold">return</span> mean, log_var</span></span></code></pre></div>
+<h3 id="decoder-1">Decoder</h3>
+<p>The Decoder follows the reverse path compared to the Encoder, going from smaller to larger layers. Keep in mind that the input to the Decoder is the random variable <strong>z</strong>.</p>
+<pre tabindex="0"><code>z = mu + sigma * epsilon
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">class</span> Decoder(Model):
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">def</span> __init__(self, original_dim):
+</span></span><span style="display:flex;"><span>        super(Decoder, self).__init__()
+</span></span><span style="display:flex;"><span>        self.dense1 = layers.Dense(<span style="color:#0086f7;font-weight:bold">128</span>, activation=<span style="color:#0086d2">&#39;relu&#39;</span>)
+</span></span><span style="display:flex;"><span>        self.dense2 = layers.Dense(<span style="color:#0086f7;font-weight:bold">256</span>, activation=<span style="color:#0086d2">&#39;relu&#39;</span>)
+</span></span><span style="display:flex;"><span>        self.dense3 = layers.Dense(<span style="color:#0086f7;font-weight:bold">512</span>, activation=<span style="color:#0086d2">&#39;relu&#39;</span>)
+</span></span><span style="display:flex;"><span>        self.dense_output = layers.Dense(original_dim, activation=<span style="color:#0086d2">&#39;sigmoid&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">def</span> <span style="color:#ff0086;font-weight:bold">call</span>(self, z):
+</span></span><span style="display:flex;"><span>        x = self.dense1(z)
+</span></span><span style="display:flex;"><span>        x = self.dense2(x)
+</span></span><span style="display:flex;"><span>        x = self.dense3(x)
+</span></span><span style="display:flex;"><span>        output = self.dense_output(x)
+</span></span><span style="display:flex;"><span>        <span style="color:#fb660a;font-weight:bold">return</span> output</span></span></code></pre></div>
+<h3 id="vae">VAE</h3>
+<p>Putting it all together looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">class</span> VAE(Model):
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">def</span> __init__(self, encoder, decoder, latent_dim):
+</span></span><span style="display:flex;"><span>        super(VAE, self).__init__()
+</span></span><span style="display:flex;"><span>        self.encoder = encoder
+</span></span><span style="display:flex;"><span>        self.decoder = decoder
+</span></span><span style="display:flex;"><span>        self.latent_dim = latent_dim
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">def</span> <span style="color:#ff0086;font-weight:bold">call</span>(self, inputs):
+</span></span><span style="display:flex;"><span>        mean, log_var = self.encoder(inputs)
+</span></span><span style="display:flex;"><span>        epsilon = tf.random.normal(shape=(tf.shape(inputs)[<span style="color:#0086f7;font-weight:bold">0</span>], self.latent_dim))
+</span></span><span style="display:flex;"><span>        z = mean + tf.exp(log_var * <span style="color:#0086f7;font-weight:bold">0.5</span>) * epsilon
+</span></span><span style="display:flex;"><span>        reconstructed = self.decoder(z)
+</span></span><span style="display:flex;"><span>        <span style="color:#fb660a;font-weight:bold">return</span> reconstructed, mean, log_var</span></span></code></pre></div>
+<h3 id="loss-function-1">Loss function</h3>
+<p>A quick recap, the loss function for a VAE has two main components: reconstruction loss and KL divergence.</p>
+<p>Reconstruction loss: This is a standard binary crossentropy loss calculated for each pixel (or element) in the input image, which ensures the accurate reconstruction of the input data. It is multiplied by the image shape.</p>
+<p>KL divergence: The KL divergence is calculated using a previously mentioned formula and acts as a regularization term.</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">def</span> <span style="color:#ff0086;font-weight:bold">vae_loss</span>(inputs, reconstructed, mean, log_var):
+</span></span><span style="display:flex;"><span>    reconstruction_loss = tf.reduce_mean(tf.keras.losses.binary_crossentropy(inputs, reconstructed)) * <span style="color:#0086f7;font-weight:bold">28</span> * <span style="color:#0086f7;font-weight:bold">28</span>
+</span></span><span style="display:flex;"><span>    kl_loss = -<span style="color:#0086f7;font-weight:bold">0.5</span> * tf.reduce_sum(<span style="color:#0086f7;font-weight:bold">1</span> + log_var - tf.square(mean) - tf.exp(log_var), axis=-<span style="color:#0086f7;font-weight:bold">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">return</span> tf.reduce_mean(reconstruction_loss + kl_loss)</span></span></code></pre></div>
+<h2 id="art-attack">Art Attack</h2>
+<p>Alright, let&rsquo;s dive in! We&rsquo;ll be using a dataset of art masterpieces to train our Variational Autoencoder. By doing so, we hope to create a model that can generate visually appealing and diverse artistic images. Fingers crossed!</p>
+<h3 id="goal-and-expectations">Goal and expectations</h3>
+<p>First, let&rsquo;s set some expectations. Our goal is to use a <strong>non-convolutional VAE</strong> to generate complex images. A convolutional VAE would be more appropiate but I couldn&rsquo;t make it work on my side. Also with a <strong>limited dataset</strong> of around 10k diverse images, we shouldn&rsquo;t expect fully-formed, novel paintings. However, if the model can capture the general form and colors of a painting, I&rsquo;ll consider it a win.</p>
+<h3 id="data-and-examples">Data and examples</h3>
+<p>I&rsquo;ll be utilizing the <a href="https://huggingface.co/datasets/huggan/wikiart">wikiart</a> dataset courtesy of Huggingface. This dataset features a variety of artists, genres, and styles. To help the model, I&rsquo;ll filter the dataset to use only landscapes, as mixing different categories like portraits and landscapes would require more data for the model to differentiate between them.
+Also, I made some tests with the classic MNIST to see that everything is ok before feeding it the art images.</p>
+<p>Lets see some examples:</p>
+<p><img src="/land1.jpg" alt="">
+<em>Example 1</em></p>
+<p><img src="/land2.jpg" alt="">
+<em>Example 2</em></p>
+<p><img src="/land3.jpeg" alt="">
+<em>Example 3</em></p>
+<h3 id="training">Training</h3>
+<p>First I used <strong>MNIST</strong> to check eveything went correctly and it did</p>
+<p><img src="/mnist.png" alt=""></p>
+<p><em>The original image vs the reconstruction</em></p>
+<p>MNIST uses 28 * 28 pixel greyscale images, so I resized my art images to 28 * 28 and transformed them into grayscale. The results were somewhat satisfactory, but a bit <em>blurry</em>. The main issue was that it was difficult to see anything in such small images without colors. To address this, I reintroduced the RGB channels, which effectively tripled the input size, making everything slower. However, I was able to train 200 epochs in a couple of hours locally.</p>
+<p>Here is the training step used</p>
+<div class="highlight"><pre tabindex="0" style="color:#fff;background-color:#111;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#080;background-color:#0f140f;font-style:italic"># Instantiate and compile the VAE</span>
+</span></span><span style="display:flex;"><span>latent_dim = <span style="color:#0086f7;font-weight:bold">64</span>
+</span></span><span style="display:flex;"><span>encoder = Encoder(latent_dim)
+</span></span><span style="display:flex;"><span>decoder = Decoder(<span style="color:#0086f7;font-weight:bold">3</span>*<span style="color:#0086f7;font-weight:bold">28</span>*<span style="color:#0086f7;font-weight:bold">28</span>)
+</span></span><span style="display:flex;"><span>vae = VAE(encoder, decoder, latent_dim)
+</span></span><span style="display:flex;"><span>optimizer = tf.keras.optimizers.Adam(lr=<span style="color:#0086f7;font-weight:bold">0.001</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#080;background-color:#0f140f;font-style:italic"># Train the VAE</span>
+</span></span><span style="display:flex;"><span>epochs = <span style="color:#0086f7;font-weight:bold">200</span>
+</span></span><span style="display:flex;"><span>batch_size = <span style="color:#0086f7;font-weight:bold">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#fb660a;font-weight:bold">for</span> epoch in range(epochs):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#0086d2">f</span><span style="color:#0086d2">&#34;Epoch </span><span style="color:#0086d2">{</span>epoch+<span style="color:#0086f7;font-weight:bold">1</span><span style="color:#0086d2">}</span><span style="color:#0086d2">/</span><span style="color:#0086d2">{</span>epochs<span style="color:#0086d2">}</span><span style="color:#0086d2">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#fb660a;font-weight:bold">for</span> i in range(<span style="color:#0086f7;font-weight:bold">0</span>, len(train_ds), batch_size):
+</span></span><span style="display:flex;"><span>        x_batch = np.array(train_ds[i:i+batch_size][<span style="color:#0086d2">&#39;pixel_values&#39;</span>]).reshape((-<span style="color:#0086f7;font-weight:bold">1</span>, <span style="color:#0086f7;font-weight:bold">3</span>*<span style="color:#0086f7;font-weight:bold">28</span>*<span style="color:#0086f7;font-weight:bold">28</span>)) 
+</span></span><span style="display:flex;"><span>        <span style="color:#fb660a;font-weight:bold">with</span> tf.GradientTape() <span style="color:#fb660a;font-weight:bold">as</span> tape:
+</span></span><span style="display:flex;"><span>            reconstructed, mean, log_var = vae(x_batch)
+</span></span><span style="display:flex;"><span>            loss = vae_loss(x_batch, reconstructed, mean, log_var)
+</span></span><span style="display:flex;"><span>        gradients = tape.gradient(loss, vae.trainable_variables)
+</span></span><span style="display:flex;"><span>        optimizer.apply_gradients(zip(gradients, vae.trainable_variables))
+</span></span><span style="display:flex;"><span>    print(loss)</span></span></code></pre></div>
+<p>Remember that <em>latent_dim</em> is the size of our <strong>μ</strong> and <strong>σ</strong> layers. I used latent_dim=2 for MNIST and that was ok, but my problem needed more dimensions so I decided for latent_dim=64.</p>
+<h3 id="generating-art">Generating art</h3>
+<p>Lets look now at the results.</p>
+<p>First the reconstruction results, I feed the VAE with existing images and I should get the reconstructed image.</p>
+<p><img src="/result_reconstr.png" alt=""></p>
+<p>Hey not bad! It is a very blurry but I can see the shape and color of each image, this is a win. <em>⭐Blurry Art!⭐</em></p>
+<p>Now I feed the decoder only with random normal values that represent the <strong>z</strong> variable. I use the weights for <strong>μ</strong> and <strong>σ</strong> and added a generated epsilon.</p>
+<p><img src="/img1_c.png" alt=""></p>
+<p><em>Generated image 1</em></p>
+<p><img src="/img2_c.png" alt=""></p>
+<p><em>Generated image 2</em></p>
+<p><img src="/img3_c.png" alt=""></p>
+<p><em>Generated image 3</em></p>
+<p><img src="/img4_c.png" alt=""></p>
+<p><em>Generated image 4</em></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Alright, I consider this a win, even if we didn&rsquo;t create a new masterpiece. The blurriness of the images is likely due to insufficient training and the fact that the architecture is not convolutional. In the future, I&rsquo;d like to experiment with a GAN or a diffusion model, if possible. There are also other exciting projects to explore, such as generating 3D objects. Imagine creating a valid 3D object that can be fed into Blender and then printed with a 3D printer!</p>
+<p>Additionally, there are other types of VAEs like beta-VAE and VQ-VAE that I might try for other topics, such as text generation. Thank you all for sticking with me through this lengthy post, and I&rsquo;ll see you next time!</p>
+
+            </div>
+        </article>
+    </main>
+</div>
+<footer class="footer">
+    <span class="footer_item"> </span>
+    &nbsp;
+
+    <div class="footer_social-icons">
+<a href="https://github.com/nicovaras" target="_blank" rel="noopener noreferrer me" title="Github">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+</a></div>
+    <small class="footer_copyright">
+        © 2023 Nico Varas.
+        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noreferrer noopener">Hugo blog awesome</a>
+        theme on
+        <a href="https://gohugo.io" target="_blank" rel="noreferrer noopener">Hugo</a>.
+    </small>
+</footer>
+<script src="https://nicovaras.github.io/js/themeSwitchnMenu.min.2a402288242b6930b175a0722c267e2353055739b3975834df35e56d00dd8f50.js"></script></body>
+</html>
