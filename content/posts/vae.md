@@ -275,3 +275,5 @@ Now I feed the decoder only with random normal values that represent the **z** v
 Alright, I consider this a win, even if we didn't create a new masterpiece. The blurriness of the images is likely due to insufficient training and the fact that the architecture is not convolutional. In the future, I'd like to experiment with a GAN or a diffusion model, if possible. There are also other exciting projects to explore, such as generating 3D objects. Imagine creating a valid 3D object that can be fed into Blender and then printed with a 3D printer!
 
 Additionally, there are other types of VAEs like beta-VAE and VQ-VAE that I might try for other topics, such as text generation. Thank you all for sticking with me through this lengthy post, and I'll see you next time! 
+
+Here is the link to the [Notebook](https://github.com/nicovaras/deep-learning-projects/blob/main/VAE_art.ipynb)
