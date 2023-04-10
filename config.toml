@@ -1,7 +1,6 @@
 baseURL = 'https://nicovaras.github.io/'
 languageCode = 'en-us'
 title = "Sir Gradient's Descent into Madness"
-title2 = 'The Count of Data Cristo'
 theme = 'hugo-blog-awesome'
 publishDir = "docs"
 
@@ -12,7 +11,7 @@ enableEmoji = true
 [params]
   sitename = "Sir Gradient's Descent into Madness"
   defaultColor = "dark" # set default color mode: dark or light
-  description = "Exploring the intricacies of Machine Learning and unraveling the mysteries of Data Science, one algorithm at a time."
+  description = "Exploring the intricacies of Machine Learning and Data Science, one algorithm at a time."
 
 
 [markup]
