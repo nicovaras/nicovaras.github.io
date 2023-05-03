@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Sir Gradient&#39;s Descent into Madness</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nicovaras.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Apr 2023 11:43:05 +0200</lastBuildDate><atom:link href="https://nicovaras.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Emoji Journey: Exploring Sentiments with the Power of TPUs 🎉</title>
+      <link>https://nicovaras.github.io/posts/emoji-tpu/</link>
+      <pubDate>Fri, 28 Apr 2023 11:43:05 +0200</pubDate>
+      
+      <guid>https://nicovaras.github.io/posts/emoji-tpu/</guid>
+      <description>Notebook: here
+Today, I&amp;rsquo;m excited to share a fun mini project I&amp;rsquo;ve been working on 🎉. I came across a dataset of tweets with emojis on Kaggle and thought, &amp;ldquo;Why not try to do something with this?&amp;rdquo; 🤔. The project started out pretty standard, but as there was a ton of data and my architectures were quite large (I tried transformers again without success - yet again 😅), it quickly became challenging.</description>
+    </item>
+    
     <item>
       <title>Painting with pixels: Variational Autoencoders applied to art</title>
       <link>https://nicovaras.github.io/posts/vae/</link>
